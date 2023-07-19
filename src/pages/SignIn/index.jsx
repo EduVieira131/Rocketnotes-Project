@@ -2,10 +2,15 @@ import { Container, Form, Background } from './styles'
 import { FiMail, FiLock } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 
+import { AuthProvider, useAuth } from '../../hooks/auth'
+
 import { Input } from '../../components/Input'
-import {Button} from '../../components/Button'
+import { Button } from '../../components/Button'
 
 export function SignIn() {
+  const data = useAuth()
+  console.log("Meu Contexto =>", data);
+
   return (
     <Container>
       <Form>
@@ -18,7 +23,7 @@ export function SignIn() {
         <Input type="password" placeholder="Senha" icon={FiLock} />
 
         <Button title="Entrar" />
-        
+
         <Link to="/register">Criar conta</Link>
       </Form>
 
