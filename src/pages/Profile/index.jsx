@@ -2,7 +2,7 @@ import { useState } from "react"
 
 import { Container, Form, Avatar } from './styles'
 import { FiArrowLeft, FiCamera, FiLock, FiMail, FiUser } from 'react-icons/fi'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { useAuth } from "../../hooks/auth"
 
@@ -14,6 +14,8 @@ import { Input } from '../../components/Input'
 
 export function Profile() {
   const { user, updateProfile } = useAuth()
+
+  const navigate = useNavigate()
 
   const [name, setName] = useState(user.name)
   const [email, setEmail] = useState(user.email)
@@ -44,12 +46,16 @@ export function Profile() {
 
   }
 
+  function handleBack() {
+    navigate(-1)
+  }
+
   return (
     <Container>
       <header>
-        <Link to="/">
+        <button type="button" onClick={handleBack}>
           <FiArrowLeft />
-        </Link>
+        </button>
       </header>
 
       <Form>

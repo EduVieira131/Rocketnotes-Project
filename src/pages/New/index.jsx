@@ -7,9 +7,10 @@ import { Button } from '../../components/Button'
 
 import { useState } from 'react'
 import { api } from '../../services/api'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { Container, Form } from './styles'
+import { ButtonText } from '../../components/ButtonText'
 
 export function New() {
   const [title, setTitle] = useState("")
@@ -62,7 +63,11 @@ export function New() {
     })
 
     alert("Nota criada com sucesso!")
-    navigate("/")
+    navigate(-1)
+  }
+
+  function handleBack() {
+    navigate(-1)
   }
 
   return (
@@ -73,7 +78,7 @@ export function New() {
         <Form>
           <header>
             <h1>Criar nota</h1>
-            <Link to="/">Voltar</Link>
+            <ButtonText title="Voltar" onClick={handleBack} />
           </header>
 
           <Input
