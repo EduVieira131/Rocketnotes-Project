@@ -9,12 +9,22 @@ import { Note } from '../../components/Notes'
 
 import { useState, useEffect } from 'react'
 import { api } from '../../services/api'
+import { useNavigate } from 'react-router-dom'
 
 export function Home() {
+  const [searchValue, setSearchValue] = useState("")
   const [tags, setTags] = useState([])
   const [tagsSelected, setTagsSelected] = useState([])
 
+  const [notes, setNotes] = useState([])
+
+  const navigate = useNavigate()
+
   function handleTagSelected(tagName) {
+    if (tagName === "all") {
+      return setTagsSelected([])
+    }
+
     const alreadySelected = tagsSelected.includes(tagName)
 
     if (alreadySelected) {
@@ -25,6 +35,10 @@ export function Home() {
     }
   }
 
+  function handleDetails(id) {
+    navigate(`/details/${id}`)
+  }
+
   useEffect(() => {
     async function fetchTags() {
       const response = await api.get("/tags")
@@ -33,6 +47,15 @@ export function Home() {
 
     fetchTags()
   }, [])
+
+  useEffect(() => {
+    async function fetchNotes() {
+      const response = await api.get(`/notes?title=${searchValue}&tags=${tagsSelected}`)
+      setNotes(response.data)
+    }
+
+    fetchNotes()
+  }, [tagsSelected, searchValue])
 
   return (
     <Container>
@@ -65,22 +88,23 @@ export function Home() {
       </Menu>
 
       <Search>
-        <Input placeholder="Pesquisar pelo título" />
+        <Input
+          placeholder="Pesquisar pelo título"
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
       </Search>
 
       <Content>
         <Section title="Minhas notas">
-          <Note
-            data={{
-              title: 'React',
-              tags: [
-                {
-                  id: '1',
-                  name: 'React'
-                }
-              ]
-            }}
-          />
+          {
+            notes.map(note => (
+              <Note
+                key={String(note.id)}
+                data={note}
+                onClick={() => handleDetails(note.id)}
+              />
+            ))
+          }
         </Section>
       </Content>
 
